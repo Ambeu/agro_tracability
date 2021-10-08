@@ -1,27 +1,19 @@
 const icon = L.icon({
-  iconSize: [20, 29],
+  iconSize: [25, 41],
   iconAnchor: [10, 41],
   popupAnchor: [2, -40],
   iconUrl: "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png",
-  // iconUrl: "http://127.0.0.1:8000/static/img/icons/my_icon1.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.6/dist/images/marker-shadow.png",
-  // // shadowUrl: "http://127.0.0.1:8000/static/img/icons/my_icon1.png"
+  shadowUrl: "https://unpkg.com/leaflet@1.6/dist/images/marker-shadow.png"
 });
 
 Promise.all([
-  fetch("http://127.0.0.1:8000/api/v1/map_parcelles/"),
-//  fetch("http://127.0.0.1:8000/api/parcelles?format=json")
+  fetch("http://tracability.pythonanywhere.com/api/v1/map_parcelles/"),
 ]).then(async ([response1]) => {
   const responseData1 = await response1.json();
-//  const responseData2 = await response2.json();
-
   const data1 = responseData1;
-  // console.log(data1);
-//  const data2 = responseData2;
-
   const parcelles = L.featureGroup().addTo(map);
 
-  data1.forEach(({code, producteur, latitude, longitude, culture, certification, superficie, id  }) => {
+data1.forEach(({code, producteur, latitude, longitude, culture, certification, superficie, id  }) => {
     parcelles.addLayer(
       L.marker([latitude, longitude], { icon }).bindPopup(
         `
@@ -32,30 +24,22 @@ Promise.all([
                   <th scope="col" class="center">INFORMATIONS</th>                  
                 </tr>
             </thead>
-            <tbody style="align-items: center">  
-                <tr>
-                    <th scope="col"><b>CODE PARCELLE :</b></th>
-                    <td class="text-uppercase"><strong>${code}</strong></td>                    
-                </tr>  
-                <tr>
-                    <th scope="col"><b>PRODUCTEUR :</b></th>
-                    <td class="text-uppercase"><strong>${producteur.code} - ${producteur.nom}</strong></td>                    
-                </tr>        
-                <tr>
-                    <th scope="col"><b>COOPERATIVE :</b></th>
-                    <td class="text-uppercase"><strong>${producteur.cooperative.sigle}</strong></td>                    
-                </tr>
+            <tbody style="align-items: center">            
                 <tr>
                     <th scope="col"><b>LOCALITE :</b></th>
                     <td class="text-uppercase"><strong>${producteur.localite}</strong></td>                    
                 </tr>
                 <tr>
-                    <th scope="col"><b>SECTION :</b></th>
-                    <td class="text-uppercase"><strong>${producteur.section.libelle}</strong></td>                    
+                    <th scope="col"><b>PRODUCTEUR :</b></th>
+                    <td class="text-uppercase"><strong>${producteur.code} - ${producteur.nom}</strong></td>                    
+                </tr>
+                <tr>
+                    <th scope="col"><b>CODE PARCELLE :</b></th>
+                    <td class="text-uppercase"><strong>${code}</strong></td>                    
                 </tr>
                 <tr>
                     <th scope="col"><b>COORDONNEES :</b></th>
-                    <td class="text-uppercase">(${latitude},${longitude})</td>
+                    <td class="text-uppercase">(${longitude},${latitude})</td>
                 </tr>
                 <tr>
                     <th scope="col"><b>CERTIFICATION : </b></th>
@@ -71,14 +55,16 @@ Promise.all([
                 </tr>
                 <tr>
                     <th scope="col"><b>ESPECES</b></th>
-                    <td class="text-uppercase text-center">                        
+                    <td class="text-uppercase text-center">
+                        <a class="btn btn-info" href="#" role="button">Afficher</a>
                         <a class="btn btn-success" href="#" role="button"><i class="glyphicon glyphicon-tree-deciduous"></i></a>
                     </td>
                 </tr>
                 <tr>
                     <th scope="col"><b>CONTOURS</b></th>
-                    <td class="text-uppercase text-center">                  
-                        <a class="btn btn-success" href="#" role="button"><i class="fas fa-map-marked-alt"></i></a>
+                    <td class="text-uppercase text-center">
+                        <a class="btn btn-info" href="#" role="button">Afficher</a>
+                        <a class="btn btn-success" href="#" role="button"><i class="glyphicon glyphicon-tree-deciduous"></i></a>
                     </td>
                 </tr>
             </tbody>
@@ -92,7 +78,7 @@ Promise.all([
 });
 
 //Initialisation de la Map
-var map = L.map('map').setView([7.539989, -5.547080], 10);
+var map = L.map('map').setView([7.539989, -5.547080], 7);
 map.zoomControl.setPosition('topright');
 
 var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -109,13 +95,13 @@ var climat = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 
 // Ajouter Popup de Marquage
 var singleMarker = L.marker([5.349390, -4.017050])
- .bindPopup("Bienvenus en .<br> Côte d'Ivoire.")
+ .bindPopup("Bienvenus en .<br> CÃ´te d'Ivoire.")
  .openPopup();
 
 // Ajouter Calcul de Distance
 L.control.scale().addTo(map);
 
-//Afficher les Coordonnées sur la carte
+//Afficher les CoordonnÃ©es sur la carte
 map.on('mousemove', function (e) {
  //console.log(e);
  $('.coordinates').html(`lat: ${e.latlng.lat}, lng: ${e.latlng.lng}`)
@@ -129,7 +115,7 @@ marker.addTo(map);
 
 // Laeflet Layer control
 var baseMaps = {
- 'NORMAL': osm,
+ 'ROUTE': osm,
  'COUVERT FORESTIER': climat,
 }
 
@@ -157,7 +143,6 @@ var overLayMaps = {
  // 'ABIDJAN': singleMarker
 }
 L.control.layers(baseMaps, overLayMaps, {collapse :false, position: 'topleft'}).addTo(map);
-
 
 
 
