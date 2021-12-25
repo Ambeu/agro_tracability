@@ -60,13 +60,13 @@ data1.forEach(({code, producteur, latitude, longitude, culture, certification, s
                         <a class="btn btn-success" href="#" role="button"><i class="glyphicon glyphicon-tree-deciduous"></i></a>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="col"><b>CONTOURS</b></th>
-                    <td class="text-uppercase text-center">
-                        <a class="btn btn-info" href="#" role="button">Afficher</a>
-                        <a class="btn btn-success" href="#" role="button"><i class="glyphicon glyphicon-tree-deciduous"></i></a>
-                    </td>
-                </tr>
+                // <tr>
+                //     <th scope="col"><b>CONTOURS</b></th>
+                //     <td class="text-uppercase text-center">
+                //         <a class="btn btn-info" href="#" role="button">Afficher</a>
+                //         <a class="btn btn-success" href="#" role="button"><i class="glyphicon glyphicon-tree-deciduous"></i></a>
+                //     </td>
+                // </tr>
             </tbody>
           </table>    
         `

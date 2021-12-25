@@ -29,7 +29,7 @@ from xhtml2pdf import pisa
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .serializers import ParcelleSerializer
+from .serializers import CoopParcelleSerializer, CooperativeSerializer, ParcelleSerializer
 
 @api_view(['GET'])
 def map_parcelles(request):
@@ -38,6 +38,15 @@ def map_parcelles(request):
     nb_parcelles = parcelles.count()
     print(nb_parcelles)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def parcelle_info(request):
+    code = request.GET.get('code')
+    producteur= request.GET.get('producteur')
+    parcelles = Parcelle.objects.get(producteur_id=1)
+    serializer = ParcelleSerializer(parcelles)
+    
+    return JsonResponse(serializer.data,safe=False)
 
 def catre_parcelles(request):
     cooperatives = Cooperative.objects.all()

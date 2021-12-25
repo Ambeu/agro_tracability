@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-$w90@s!#+$-x_j=p)mss5ty^fu7^obdgprsg5d@fll9d86a6br
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['http://tracability.pythonanywhere.com', '*']
 
 SEND_BROKEN_LINK_EMAILS = True
 ADMINS = (
@@ -49,6 +49,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    'DEFAULT_RENDERER_CLASSES':('rest_framework.renderers.JSONRenderer',)
     # 'DEFAULT_FILTER_BACKENDS': (
     #     'rest_framework.filters.DjangoFilterBackend',
     # ),
@@ -81,7 +82,7 @@ INSTALLED_APPS = [
     'import_export',
     'rest_framework',
     'rest_framework.authtoken',
-    'dj_rest_auth',
+    #'dj_rest_auth',
     'django_countries',
     'widget_tweaks',
 

@@ -221,6 +221,29 @@ class ParcelleSerializer(serializers.ModelSerializer):
         )
         depth = 1
 
+    # def to_representation(self, instance):
+    #     response = super().to_representation(instance)
+    #     response['producteur'] = ProducteurSerializer(instance.producteur).data
+    #     return response
+
+
+class CoopParcelleSerializer(serializers.ModelSerializer):
+    #producteur = ProducteurSerializer(many=True)
+    class Meta:
+        model=Parcelle
+        fields = (
+            'id',
+            'code',
+            'producteur',
+            'acquisition',
+            'latitude',
+            'longitude',
+            'culture',
+            'certification',
+            'superficie'
+        )
+        depth = 1
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['producteur'] = ProducteurSerializer(instance.producteur).data

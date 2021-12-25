@@ -89,5 +89,5 @@ urlpatterns = [
     path('parcelles/pdf/', export_parcelles_to_pdf, name='export_parcelles_to_pdf'),
 
 
-    path('parcelleCoop/<str:pk>/', getParcelleCoop, name="parcelleCoop"),
+    path('parcelleCoop/<int:pk>/', getParcelleCoop, name="parcelleCoop"),
 ]

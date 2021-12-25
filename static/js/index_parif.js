@@ -16,83 +16,31 @@ Promise.all([
 //  const responseData2 = await response2.json();
 
   const data1 = responseData1;
-  // console.log(data1);
+  console.log(data1);
 //  const data2 = responseData2;
 
   const parcelles = L.featureGroup().addTo(map);
 
   data1.forEach(({code, producteur, latitude, longitude, culture, certification, superficie, id  }) => {
-    parcelles.addLayer(
-      L.marker([latitude, longitude], { icon }).bindPopup(
-        `
-          <table class="table table-striped table-bordered">
-            <thead style="align-items: center">
-                <tr>           
-                  <th scope="col" class="center">ID</th>
-                  <th scope="col" class="center">INFORMATIONS</th>                  
-                </tr>
-            </thead>
-            <tbody style="align-items: center">  
-                <tr>
-                    <th scope="col"><b>CODE PARCELLE :</b></th>
-                    <td class="text-uppercase"><strong>${code}</strong></td>                    
-                </tr>  
-                <tr>
-                    <th scope="col"><b>PRODUCTEUR :</b></th>
-                    <td class="text-uppercase"><strong>${producteur.code} - ${producteur.nom}</strong></td>                    
-                </tr>        
-                <tr>
-                    <th scope="col"><b>COOPERATIVE :</b></th>
-                    <td class="text-uppercase"><strong>${producteur.cooperative.sigle}</strong></td>                    
-                </tr>
-                <tr>
-                    <th scope="col"><b>LOCALITE :</b></th>
-                    <td class="text-uppercase"><strong>${producteur.localite}</strong></td>                    
-                </tr>
-                <tr>
-                    <th scope="col"><b>SECTION :</b></th>
-                    <td class="text-uppercase"><strong>${producteur.section.libelle}</strong></td>                    
-                </tr>
-                <tr>
-                    <th scope="col"><b>COORDONNEES :</b></th>
-                    <td class="text-uppercase">(${latitude},${longitude})</td>
-                </tr>
-                <tr>
-                    <th scope="col"><b>CERTIFICATION : </b></th>
-                    <td class="text-uppercase">${certification}</td>                    
-                </tr>
-                <tr>
-                    <th scope="col"><b>CULTURE :</b></th>
-                    <td class="text-uppercase">${culture}</td>                    
-                </tr>
-                <tr>
-                    <th scope="col"><b>SUPERFICIE</b></th>
-                    <td class="text-uppercase">${superficie} (Ha)</td>
-                </tr>
-                <tr>
-                    <th scope="col"><b>ESPECES</b></th>
-                    <td class="text-uppercase text-center">                        
-                        <a class="btn btn-success" href="#" role="button"><i class="glyphicon glyphicon-tree-deciduous"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="col"><b>CONTOURS</b></th>
-                    <td class="text-uppercase text-center">                  
-                        <a class="btn btn-success" href="#" role="button"><i class="fas fa-map-marked-alt"></i></a>
-                    </td>
-                </tr>
-            </tbody>
-          </table>    
-        `
-      )
-    );
+    
+      parcelles.addLayer(
+        clickIcon = L.marker([latitude, longitude], { icon }),
+
+        clickIcon.on('click',function(){
+          clickIcon.bindPopup()
+        }),
+
+        )
+
+
+    
   });
 
   map.fitBounds(parcelles.getBounds());
 });
 
 //Initialisation de la Map
-var map = L.map('map').setView([7.539989, -5.547080], 10);
+var map = L.map('map').setView([7.539989, -5.547080], 15);
 map.zoomControl.setPosition('topright');
 
 var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -133,7 +81,7 @@ var baseMaps = {
  'COUVERT FORESTIER': climat,
 }
 
-var markers = L.markerClusterGroup({
+var parcelles = L.markerClusterGroup({
 	spiderfyShapePositions: function(count, centerPt) {
         var distanceFromCenter = 35,
             markerDistance = 45,
@@ -147,7 +95,6 @@ var markers = L.markerClusterGroup({
         for (i = count - 1; i >= 0; i--) {
             res[i] = new Point(centerPt.x + distanceFromCenter, lineStart + markerDistance * i);
         }
-
         return res;
     }
 });

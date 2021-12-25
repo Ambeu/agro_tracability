@@ -56,12 +56,12 @@ class DetailPlantingAdmin(admin.TabularInline):
    model = DetailPlanting
    extra = 0
 
-""" class DetailPlantingResource(resources.ModelResource):
+class DetailPlantingResource(resources.ModelResource):
     class Meta:
         model = DetailPlanting
 
 class DetailPlantingAdmin(ImportExportModelAdmin):
-    resource_class = DetailPlantingResource """
+    resource_class = DetailPlantingResource
 
 class MinitoringAdmin(admin.TabularInline):
    model = Monitoring
@@ -75,7 +75,7 @@ class PlantingAdmin(ImportExportModelAdmin):
    list_display_links = ('parcelle',)
    list_filter = ["parcelle__producteur__cooperative", ]
    readonly_fields = ["plant_total"]
-   inlines = [DetailPlantingAdmin, MinitoringAdmin]
+   inlines = [MinitoringAdmin]
 
 # admin.site.register(Cooperative, CooperativeAdmin)
 admin.site.register(Section, SectionAdmin)
@@ -86,7 +86,7 @@ admin.site.register(Detail_Formation)
 admin.site.register(Producteur, ProducteurAdmin)
 admin.site.register(Parcelle, ParcelleAdmin)
 admin.site.register(Planting, PlantingAdmin)
-#admin.site.register(DetailPlanting, DetailPlantingAdmin)
+admin.site.register(DetailPlanting, DetailPlantingAdmin)
 # admin.site.register(Pepiniere, PepiniereAdmin)
 # admin.site.register(Retrait_plant, RetraitPlantAdmin)
 # Register your models here.

@@ -9,7 +9,8 @@ from .views import (
     map_parcelles,
     coop_parcelles,
     catre_parcelles,
-    catre_parcelles_coop
+    catre_parcelles_coop,
+    parcelle_info
     # projet,
     # # pepiniere,
     # # detail_pepiniere,
@@ -109,6 +110,7 @@ urlpatterns = [
 
     # Api
     path('api/v1/map_parcelles/', map_parcelles, name='map_parcelles'),
+    path('api/v1/parcelle_info/', parcelle_info, name='parcelle_info'),
     path('map_parcelles/', catre_parcelles, name='catre_parcelles'),
     path('api/v1/coop_parcelles/<int:id>', coop_parcelles, name='coop_parcelles'),
     path('coop_parcelles/', catre_parcelles_coop, name='carte_parcelles_coop'),

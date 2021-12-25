@@ -16,6 +16,13 @@ from .models import (
     Cooperative
 )
 
+class CooperativeResource(resources.ModelResource):
+    class Meta:
+        model = Cooperative
+
+class CooperativeAdmin(ImportExportModelAdmin):    
+    resource_class = CooperativeResource
+
 class EspeceResource(resources.ModelResource):
     class Meta:
         model = Espece
@@ -23,7 +30,7 @@ class EspeceResource(resources.ModelResource):
 class EspeceAdmin(ImportExportModelAdmin):    
     resource_class = EspeceResource
 
-admin.site.register(Cooperative)
+admin.site.register(Cooperative, CooperativeAdmin)
 admin.site.register(Activite)
 admin.site.register(Campagne)
 admin.site.register(Espece, EspeceAdmin)
