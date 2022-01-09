@@ -8,8 +8,17 @@
             <li>
 {#                <a href="{% url 'clients:projets' %}" class="active"><i class="fa fa-dashboard fa-fw"></i> GESTION PROJETS</a>#}
             </li>
+         
             <li>
-                <a href="{% url 'catre_parcelles' %}" target="_blank"><i class="fa fa-map-marker fa-fw"></i> PARCELLES</a>
+                <a href="{% url 'pepinieres' %}" class="active"><i class="glyphicon glyphicon-grain"></i> PEPINIERES</a>
+            </li>
+
+            <li>
+                <a href="{% url 'catre_parcelles' %}" target="_blank"><i class="fa fa-map-marker fa-fw"></i>CARTE PARCELLES</a>
+            </li>
+
+            <li>
+                <a href="{% url 'catre_pepiniere' %}" target="_blank"><i class="fa fa-map-marker fa-fw"></i> CARTE PEPINIERES</a>
             </li>
             <li>
                 {#                  <a href="#" target="_blank"><i class="fa fa-map-marker fa-fw"></i> PLANTINGS</a>#}

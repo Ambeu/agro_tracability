@@ -3,6 +3,7 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
 from .models import (
+    Fournisseur,
     Sous_Prefecture,
     Origine,
     Prime,
@@ -13,8 +14,16 @@ from .models import (
     Espece,
     Cat_Plant,
     Projet_Cat,
-    Cooperative
+    Cooperative,
+    ObsMonitoring,
+    Pepiniere,
+    Semence_Pepiniere,
+    #MonitoringObserves,
 )
+
+class DetailsSemencePepiniereAdmin(admin.TabularInline):
+   model = Semence_Pepiniere
+   extra = 0
 
 class CooperativeResource(resources.ModelResource):
     class Meta:
@@ -30,6 +39,10 @@ class EspeceResource(resources.ModelResource):
 class EspeceAdmin(ImportExportModelAdmin):    
     resource_class = EspeceResource
 
+class PepiniereAdmin(ImportExportModelAdmin):
+   inlines = [DetailsSemencePepiniereAdmin]
+   # inlines = [Details_RetraitAdmin]
+
 admin.site.register(Cooperative, CooperativeAdmin)
 admin.site.register(Activite)
 admin.site.register(Campagne)
@@ -41,5 +54,10 @@ admin.site.register(Region)
 admin.site.register(Sous_Prefecture)
 admin.site.register(Cat_Plant)
 admin.site.register(Projet_Cat)
+#admin.site.register(MonitoringObserves)
+admin.site.register(Fournisseur)
+admin.site.register(ObsMonitoring)
+admin.site.register(Pepiniere, PepiniereAdmin)
+
 
 # Register your models here.

@@ -1,5 +1,5 @@
 {% load static %}
-{#{% load leaflet_tags %}#}
+{% load leaflet_tags %}
 <!doctype html>
 <html lang="fr">
     <head>
@@ -16,9 +16,9 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
         <link rel="stylesheet" href="{% static 'css/styles.css' %}">
         <link href="{% static 'css/languages/fr.json' %}">
-{#        {% leaflet_js %}#}
+        {% leaflet_js %}
         <style>
-            .loader,
+        .loader, 
         .loader:after {
             border-radius: 50%;
             width: 10em;
@@ -72,48 +72,101 @@
     </head>
 
     <body>
+        <div id="inputs" class="leaflet-control inputs" >
+            <select id="cooperative"   class="form-select form-select-lg mb-3" onchange="viewMapCoop(this.options[this.selectedIndex].value, '{% url 'map_cooperative' %}' )" aria-label=".form-select-sm example">
+                <option value="" selected> Toutes les cooperatives</option>
+                {% for cooperative in cooperatives %}
+                <option value="{{ cooperative.id }}">{{ cooperative.sigle }}</option>
+                {% endfor %}
+              </select>
+
+              <select id="section" onchange="viewMapSection(this.options[this.selectedIndex].value, '{% url 'map_section' %}' )" style="display:none;"   class="form-select form-select-lg mb-3 secta"  aria-label=".form-select-sm example">
+            
+                
+            </select>
+        </div>
+
+      
+        
+        <div id="weathermap">
+          
         <div id="map">
 
              <!-- Affichage des Cooperative -->
-{#            <div class="leaflet-control coop">#}
-{#                <ul>#}
-{#                    {% for cooperative in cooperatives %}#}
-{#                        <li><a href="{% url 'coop_parcelles' cooperative.id %}">{{ cooperative.sigle }}</a></li>#}
-{#                    {% endfor %}#}
-{#                </ul>#}
-{#            </div>#}
 
-            <div id="inputs" class="leaflet-control inputs">
-                {% for cooperative in cooperatives %}
-                    <a class="btn btn-primary text-center" href="{% url 'coop_parcelles' cooperative.id %}" style="text-align: center; color: #ffffff">{{ cooperative.sigle }}</a>
-{#                   <input type="button" id="{{ section.libelle }}" value="{{ section.libelle }}">#}
-                {% endfor %}
-            </div>
 
-            <!-- Cordonnees Carte -->
+          
+
+           <!-- Cordonnees Carte 
             <div class="leaflet-control map-coordonnes">
-                <div class="coordinates"></div>
-            </div>
+                <div class="coordinates "></div>
+            </div> -->
 
             <!-- Mode Plein Ecran Carte -->
-            <div class="leaflet-control full-screen" onclick=fullScreenView()>
+            <div class="leaflet-control  full-screen" onclick=fullScreenView()>
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z"/>
                 </svg>
             </div>
 
             <!-- Initialiser la carte -->
-            <div class="leaflet-control zoom">
+            <div class="leaflet-control  zoom">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-house-door" viewBox="0 0 16 16">
                     <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z"/>
                 </svg>
             </div>
 
         </div>
+    </div>
 
-        <div id="modal" class="modal-body">
+    <style>
 
-          </div>
+        #inputs #cooperative {
+            margin-left: 70px;
+            margin-top: 20px;
+            text-align: justify;
+            float: right;
+            display: inline;
+            position: absolute;
+            height: 30px;
+        }
+
+        #inputs .secta {
+            position: absolute;
+            height: 30px;
+            margin-left: 270px;
+            margin-top: 20px;
+
+        }
+
+        @media screen and (max-width: 400px) {
+            #inputs #cooperative{
+                margin-left: 60px;
+                margin-bottom: 10px;
+                position: absolute;
+                float: center;
+            }
+
+            #inputs .secta{
+                position: absolute;
+                margin-top: 60px;
+                height: 30px;
+                margin-left: 62px;
+                float: center;
+                /*position: absolute;*/
+                /*margin-top: 40px;*/
+                /*height: 30px;*/
+                /*margin-left: 20px;*/
+                /*float: center;*/
+            }
+
+            .full-screen{
+                 display: none;
+            }
+
+
+  }
+    </style>
 
 
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -126,18 +179,13 @@
         <script src="{% static 'js/leaflet-measure.js' %}"></script>
         <script src="{% static 'js/leaflet.markercluster.js' %}"></script>
         <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-        <script src="{% static 'js/index_parif.js' %}"></script>
+{#        <script src="{% static 'js/index_parif.js' %}"></script>#}
+        <script src="{% static 'js/index_planting_parif.js' %}"></script>
+        <script src="{% static 'js/index_parif_coop.js' %}"></script>
+        <script src="{% static 'js/index_parif_section.js' %}"></script>
         <script src="{% static 'js/Web-GIS.js' %}"></script>
-        <script>
-            $(window).on('load', function(){
-              setTimeout(removeLoader, 2000); //wait for page load PLUS two seconds.
-            });
-            function removeLoader(){
-                $( "#loader" ).fadeOut(500, function() {
-                  // fadeOut complete. Remove the loading div
-                  $( "#loader" ).remove(); //makes page more lightweight
-              });
-            }
-        </script>
+        <script type="text/javascript" src="{% static 'js/loaders/blockui.min.js' %}"></script>
+        <script src="{% static 'js/jquery.blockUI.js' %}"></script>
+        
     </body>
 </html>

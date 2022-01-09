@@ -27,9 +27,10 @@ from .views import (
     export_prods_to_pdf,
     export_prod_xls,
     export_parcelle_xls,
-    export_plant_xls, Editformation, parcelle_update, update_section, delete_section, export_section_xls, update_sous_section,
+    export_plant_xls, Editformation, parcelle_update, update_section, delete_section, export_section_xls,
+    update_sous_section,
     export_sous_section_xls, export_formation_xls, delete_sous_section, ParcellesMapView, parcelle_list, ReceptionView,
-    folium_map, PlantingList, detail_planting, coopdetailPlantings, CoopPlantings, getParcelleCoop,
+    folium_map, PlantingList, detail_planting, coopdetailPlantings, CoopPlantings, getParcelleCoop, map_by_cooperative,
     # delete_sous_section, export_sous_section_xls, export_formation_xls, my_parcelles, ParcellesView,
     # load_section
 )
@@ -90,4 +91,7 @@ urlpatterns = [
 
 
     path('parcelleCoop/<int:pk>/', getParcelleCoop, name="parcelleCoop"),
+
+    #route des parcelles par cooperative
+    path('map_by_cooperative', map_by_cooperative, name="map_by_cooperative"),
 ]

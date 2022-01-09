@@ -14,7 +14,7 @@ from .models import (
     DetailPlanting,
     Monitoring,
     Formation,
-    Detail_Formation,
+    Detail_Formation
 )
 
 class SouSectionAdmin(admin.TabularInline):
@@ -60,22 +60,23 @@ class DetailPlantingResource(resources.ModelResource):
     class Meta:
         model = DetailPlanting
 
-class DetailPlantingAdmin(ImportExportModelAdmin):
-    resource_class = DetailPlantingResource
+# class DetailPlantingAdmin(ImportExportModelAdmin):
+#     resource_class = DetailPlantingResource
 
-class MinitoringAdmin(admin.TabularInline):
+class MonitoringAdmin(admin.TabularInline):
    model = Monitoring
-   fields = ['espece', 'mort', 'remplace', 'date', 'mature', 'observation']
-   list_display = ['espece', 'mort', 'remplace', 'date', 'mature', 'observation']
+   fields = ['date','mature','taux_vitalite', 'mort','taux_mortalite', 'observation']
+   list_display = ['date','mature','taux_vitalite', 'mort','taux_mortalite', 'observation']
    extra = 0
 
 class PlantingAdmin(ImportExportModelAdmin):
    fields = ('parcelle', 'projet', "campagne", "nb_plant_exitant", "plant_recus", "plant_total", "date")
    list_display = ('pk', 'parcelle','projet', "campagne", "nb_plant_exitant", "plant_recus", "plant_total", "date")
    list_display_links = ('parcelle',)
+   search_fields = ["parcelle__code", "parcelle__producteur__code", ]
    list_filter = ["parcelle__producteur__cooperative", ]
    readonly_fields = ["plant_total"]
-   inlines = [MinitoringAdmin]
+   inlines = [DetailPlantingAdmin, MonitoringAdmin]
 
 # admin.site.register(Cooperative, CooperativeAdmin)
 admin.site.register(Section, SectionAdmin)
@@ -86,7 +87,9 @@ admin.site.register(Detail_Formation)
 admin.site.register(Producteur, ProducteurAdmin)
 admin.site.register(Parcelle, ParcelleAdmin)
 admin.site.register(Planting, PlantingAdmin)
-admin.site.register(DetailPlanting, DetailPlantingAdmin)
+#admin.site.register(DetailMonitoring)
+
+# admin.site.register(DetailPlanting, DetailPlantingAdmin)
 # admin.site.register(Pepiniere, PepiniereAdmin)
 # admin.site.register(Retrait_plant, RetraitPlantAdmin)
 # Register your models here.

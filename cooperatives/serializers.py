@@ -10,17 +10,10 @@ class CooperativeSerliazer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class SectionSerliazer(serializers.ModelSerializer):
+class SectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Section
-        fields = [
-            "id",
-            "cooperative",
-            "libelle",
-            "responsable",
-            "contacts",
-        ]
-        # fields="__all__"
+        fields="__all__"
 
     def to_representation(self, instance):
         response = super().to_representation(instance)

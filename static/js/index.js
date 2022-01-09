@@ -7,15 +7,19 @@ const icon = L.icon({
 });
 
 Promise.all([
+<<<<<<< HEAD
+  fetch("http://127.0.0.1:8000/api/planting/v1/"),
+=======
   fetch("http://tracability.pythonanywhere.com/api/v1/map_parcelles/"),
+>>>>>>> 42520a3a2753707ed1100b5cdfb680bf7e00c80f
 ]).then(async ([response1]) => {
   const responseData1 = await response1.json();
   const data1 = responseData1;
   const parcelles = L.featureGroup().addTo(map);
 
-data1.forEach(({code, producteur, latitude, longitude, culture, certification, superficie, id  }) => {
+data1.forEach(({campagne, parcelle, plant_total, date, id  }) => {
     parcelles.addLayer(
-      L.marker([latitude, longitude], { icon }).bindPopup(
+      L.marker([parcelle.latitude, parcelle.longitude], { icon }).bindPopup(
         `
           <table class="table table-striped table-bordered">
             <thead style="align-items: center">
@@ -26,33 +30,37 @@ data1.forEach(({code, producteur, latitude, longitude, culture, certification, s
             </thead>
             <tbody style="align-items: center">            
                 <tr>
+                    <th scope="col"><b>COOPERATIVE :</b></th>
+                    <td class="text-uppercase"><strong>${parcelle.producteur.cooperative.sigle}</strong></td>                    
+                </tr>
+                <tr>
                     <th scope="col"><b>LOCALITE :</b></th>
-                    <td class="text-uppercase"><strong>${producteur.localite}</strong></td>                    
+                    <td class="text-uppercase"><strong>${parcelle.producteur.localite}</strong></td>                    
                 </tr>
                 <tr>
                     <th scope="col"><b>PRODUCTEUR :</b></th>
-                    <td class="text-uppercase"><strong>${producteur.code} - ${producteur.nom}</strong></td>                    
+                    <td class="text-uppercase"><strong>${parcelle.producteur.code} - ${parcelle.producteur.nom}</strong></td>                    
                 </tr>
                 <tr>
                     <th scope="col"><b>CODE PARCELLE :</b></th>
-                    <td class="text-uppercase"><strong>${code}</strong></td>                    
+                    <td class="text-uppercase"><strong>${parcelle.code}</strong></td>                    
                 </tr>
                 <tr>
                     <th scope="col"><b>COORDONNEES :</b></th>
-                    <td class="text-uppercase">(${longitude},${latitude})</td>
+                    <td class="text-uppercase">(${parcelle.longitude},${parcelle.latitude})</td>
                 </tr>
                 <tr>
                     <th scope="col"><b>CERTIFICATION : </b></th>
-                    <td class="text-uppercase">${certification}</td>                    
+                    <td class="text-uppercase">${parcelle.certification}</td>                    
                 </tr>
                 <tr>
                     <th scope="col"><b>CULTURE :</b></th>
-                    <td class="text-uppercase">${culture}</td>                    
+                    <td class="text-uppercase">${parcelle.culture}</td>                    
                 </tr>
                 <tr>
                     <th scope="col"><b>SUPERFICIE</b></th>
-                    <td class="text-uppercase">${superficie} (Ha)</td>
-                </tr>
+                    <td class="text-uppercase">${parcelle.superficie} (Ha)</td>
+                </tr>             
                 <tr>
                     <th scope="col"><b>ESPECES</b></th>
                     <td class="text-uppercase text-center">
@@ -60,13 +68,6 @@ data1.forEach(({code, producteur, latitude, longitude, culture, certification, s
                         <a class="btn btn-success" href="#" role="button"><i class="glyphicon glyphicon-tree-deciduous"></i></a>
                     </td>
                 </tr>
-                // <tr>
-                //     <th scope="col"><b>CONTOURS</b></th>
-                //     <td class="text-uppercase text-center">
-                //         <a class="btn btn-info" href="#" role="button">Afficher</a>
-                //         <a class="btn btn-success" href="#" role="button"><i class="glyphicon glyphicon-tree-deciduous"></i></a>
-                //     </td>
-                // </tr>
             </tbody>
           </table>    
         `

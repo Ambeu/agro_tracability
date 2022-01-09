@@ -276,12 +276,19 @@ class MonitoringForm(ModelForm):
     class Meta:
         model = Monitoring
         fields = [
-            # "planting",
-            # "espece",
-            "espece",
             "mort",
-            "remplace",
             "date",
             "mature",
-            # "observation"
+            "observation"
+            
         ]
+
+#class DetailMonitoringForm(ModelForm):
+#    class Meta:
+#        model = DetailMonitoring
+#        fields = [
+#           "espece",
+#            "nb_plante",
+#
+#        ]
+#

@@ -7,18 +7,20 @@ const icon = L.icon({
 });
 
 Promise.all([
-  fetch("http://127.0.0.1:8000/api/pepinieres"),
-  fetch("http://127.0.0.1:8000/api/pepinieres")
+  fetch("http://127.0.0.1:8000/api/v1/map_pepinieres/"),
+  
 ]).then(async ([response1, response2]) => {
   const responseData1 = await response1.json();
-  const responseData2 = await response2.json();
+ // const responseData2 = await response2.json();
 
   const data1 = responseData1;
-  const data2 = responseData2;
+  console.log(data1);
+  //const data2 = responseData2;
 
   const pepinieres = L.featureGroup().addTo(map);
+  //url = "http://127.0.0.1:8000/api/v1/map_pepinieres/";
 
-data1.forEach(({id, cooperative, region, ville, site, latitude, longitude, technicien, contacts_technicien, superviseur, contacts_superviseur, production_plant}) => {
+data1.forEach(({id,cooperative, region, ville, site, latitude, longitude, technicien, contacts_technicien,fournisseur,contacts_fournisseur, superviseur, contacts_superviseur, production_plant,sachet_recus}) => {
     pepinieres.addLayer(
       L.marker([latitude, longitude], { icon }).bindPopup(
         `
@@ -30,10 +32,7 @@ data1.forEach(({id, cooperative, region, ville, site, latitude, longitude, techn
                 </tr>
             </thead>
             <tbody style="align-items: center">
-                <tr>
-                    <th scope="col"><b>COOPERATIVE :</b></th>
-                    <td class="text-uppercase"><strong>${cooperative.sigle}</strong></td>                    
-                </tr>
+                
                 <tr>
                     <th scope="col"><b>LOCALISATION :</b></th>
                     <td class="text-uppercase"><strong>${ville} - ${site}</strong></td>                    
@@ -47,9 +46,23 @@ data1.forEach(({id, cooperative, region, ville, site, latitude, longitude, techn
                     <td class="text-uppercase"><strong>${technicien} - ${contacts_technicien}</strong></td>                     
                 </tr>
                 <tr>
+                <th scope="col"><b>FOURNISSEUR:</b></th>
+                  <td class="text-uppercase"><strong>${fournisseur} - ${contacts_fournisseur}</strong></td>                     
+                </tr>
+                <tr>
                     <th scope="col"><b>PLANTS A PRODUIRES :</b></th>
                     <td class="text-uppercase">${production_plant}</td>                    
                 </tr>
+                <tr>
+                    <th scope="col"><b>SACHETS RECUS :</b></th>
+                    <td class="text-uppercase">${sachet_recus}</td>                    
+                </tr>
+                <tr>
+                <th scope="col"><b>ESPECES</b></th>
+                <td class="text-uppercase text-center">
+                    <a class="btn btn-success" href="#" onclick="show_semence('http://127.0.0.1:8000/semence_by_pepiniere/${id}')" target="_blank"  role="button"><i class="glyphicon glyphicon-tree-deciduous"></i></a>
+                </td>
+            </tr>
             </tbody>
           </table>    
         `
@@ -57,7 +70,7 @@ data1.forEach(({id, cooperative, region, ville, site, latitude, longitude, techn
     );
   });
 
-  map.fitBounds(parcelles.getBounds());
+ // map.fitBounds(pepinieres.getBounds());
 });
 
 //Initialisation de la Map
@@ -109,4 +122,25 @@ var overLayMaps = {
 L.control.layers(baseMaps, overLayMaps, {collapse :false, position: 'topleft'}).addTo(map);
 
 
+
+
+function show_semence(url) {
+  event.preventDefault();
+
+  var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+
+  $.ajax({
+      url:url,
+      method: "GET",
+      dataType : "json",
+      success:function(response){
+        //console.log(response.templateStr);
+         $('#ModalSemence').html(response.templateStr)
+         $('#ModalSemence').modal('show')
+         
+      }
+  });
+
+
+}
 

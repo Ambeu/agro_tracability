@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 
-from parametres.models import Projet
+from parametres.models import Fournisseur, Pepiniere, Projet, Semence_Pepiniere
 
 User = get_user_model()
 non_allowed_username = ["abc", "123", "admin1", "admin12"]
@@ -52,3 +52,61 @@ class UserForm(forms.ModelForm):
 #     Nom = forms.CharField(max_length=30)
 #     Email = forms.EmailField()
 #     Message = forms.CharField(max_length=500,widget=forms.Textarea(attrs={'rows': 3, 'cols': 30}))
+
+
+class PepiniereForm(forms.ModelForm):
+
+    class Meta:
+        model=Pepiniere
+        fields=[
+            'projet',
+            'campagne',
+            'region',
+            'ville',
+            'site',
+            'latitude',
+            'longitude',
+            'technicien',
+            'contacts_technicien',
+            'superviseur',
+            'contacts_superviseur',
+            #'fournisseur',
+            #'contacts_fournisseur',
+            'sachet_recus',
+            'production_plant',
+            'production_realise',
+            'plant_mature',
+            'plant_retire',
+        ]
+
+class FournisseurForm(forms.ModelForm):
+
+    class Meta:
+        model=Fournisseur
+        fields=[
+            'pseudo',
+            'ville',
+            'localite',
+            'contact',
+           
+        ]
+
+
+
+
+
+class SemenceForm(forms.ModelForm):
+
+    class Meta:
+        model=Semence_Pepiniere
+        fields=[
+            'fournisseur',
+            'espece_recu',
+            'production',
+            'qte_recu',
+            'date',
+            'details',
+        ]
+       
+
+

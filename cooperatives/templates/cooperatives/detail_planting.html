@@ -173,13 +173,12 @@
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                             <thead>
-{#                                                ['espece', 'mort', 'remplace', 'date', 'mature', 'observation']#}
                                                 <tr>
-                                                    <th class="text-center">ESPECE</th>
-                                                    <th class="text-center">PLANTS MORT</th>
-                                                    <th class="text-center">PLANTS REMPLACES</th>
                                                     <th class="text-center">DATE</th>
-                                                    <th class="text-center">PLANTS MATURES</th>
+                                                    <th class="text-center">PLANTS VIVANTS</th>
+                                                    <th class="text-center">TAUX VITALITE</th>
+                                                    <th class="text-center">PLANTS MORT</th>
+                                                    <th class="text-center">TAUX MORTALITE</th>
                                                     <th class="text-center">OBSERVATION</th>
                                                     <th class="text-center">ACTIONS</th>
                                                 </tr>
@@ -187,18 +186,15 @@
                                             <tbody>
                                                 {% for monitoring in Monitorings %}
                                                     <tr class="odd gradeX">
-                                                        <td class="text-center">{{ monitoring.espece }}</td>
-                                                        <td class="text-center">{{ monitoring.mort }}</td>
-                                                        <td class="text-center">{{ monitoring.remplace }}</td>
                                                         <td class="text-center">{{ monitoring.date|date:'d/m/Y' }}</td>
                                                         <td class="text-center">{{ monitoring.mature }}</td>
-                                                        <td class="text-center">{{ monitoring.observation }}</td>
+                                                        <td class="text-center">{{ monitoring.taux_vitalite }}%</td>
+                                                        <td class="text-center">{{ monitoring.mort }}</td>
+                                                        <td class="text-center">{{ monitoring.taux_mortalite }}%</td>
+                                                        <td class="text-center">{{ monitoring.get_observation }}</td>
                                                         <td class="text-center">
                                                             <a href="#" class="btn btn-success">
                                                                 <i class="fa fa-edit"></i>
-                                                            </a>
-                                                            <a href="#" class="btn btn-danger delete">
-                                                                <i class="fa fa-trash"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -235,27 +231,17 @@
                                                 {% render_field monitoringForm.date type="date" class="form-control" placeholder="Date" %}
                                             </div>
                                             <div class="form-group">
-                                                <label>Espèce :</label>
-                                                {% render_field monitoringForm.espece class="form-control" placeholder="Espèce" %}
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Plant Mort/Espèce</label>
-                                                {% render_field monitoringForm.mort class="form-control" placeholder="Plant Mort/Espèce" %}
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Plant Remplacé/Espèce</label>
-                                                {% render_field monitoringForm.remplace class="form-control", placeholder="Plant Remplacé/Espèce" %}
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label>Plant Mature</label>
+                                                <label>Plants Vivants</label>
                                                 {% render_field monitoringForm.mature class="form-control", placeholder="Plants Matures" %}
                                             </div>
-
                                             <div class="form-group">
-                                                <label>Observation</label>
-<!--                                                {% render_field monitoringForm.observation class="form-control", placeholder="Plants Matures" %}-->
+                                                <label>Plants à Remplacés</label>
+                                                {% render_field monitoringForm.mort class="form-control", placeholder="Plant Mort" %}
                                             </div>
+                                          <div class="form-group">
+                                              <label>Observations</label>
+                                              {% render_field monitoringForm.observation class="form-control", placeholder="Observation" %}
+                                          </div>
                                         </div>
                                     </div>
                                 </div>
@@ -305,14 +291,4 @@
             <!-- /#page-wrapper -->
         </div>
         <script src="{% static 'js/jquery.min.js' %}"></script>
-
-        <script>
-            var Details_Planting = '{{ Details_Planting }}'
-            alert(Details_Planting)
-            for(i=0; Details_Planting.lenght; i++){
-              
-            }
-        </script>
-
-
 {% endblock %}

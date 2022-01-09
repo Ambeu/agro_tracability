@@ -15,7 +15,8 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from sorl.thumbnail import get_thumbnail
 from clients.models import Client
-from parametres.models import Region, Projet, Activite, Origine, Sous_Prefecture, Campagne, Espece, Cooperative
+from parametres.models import ObsMonitoring, Region, Projet, Activite, Origine, Sous_Prefecture, Campagne, Espece, Cooperative
+
 
 
 def producteurs_images(self, filename):
@@ -245,6 +246,12 @@ class DetailPlanting(models.Model):
 
     def get_absolute_url(self):
         return reverse('cooperatives:suivi_planting',args=[self.planting.id])
+
+    def total_plants(self):
+        planting = get_object_or_404(Planting, id=id)
+        t_planting = DetailPlanting.objects.filter(planting_id=planting).aggregate(total=Sum('nb_plante'))
+        return t_planting
+
     class Meta:
         verbose_name_plural = "DETAILS PLANTINGS"
         verbose_name = "details planting"
@@ -252,17 +259,36 @@ class DetailPlanting(models.Model):
 class Monitoring(models.Model):
     planting = models.ForeignKey(Planting, on_delete=models.CASCADE)
     mort = models.PositiveIntegerField(default=0, verbose_name="NBRE PLANTS MORTS")
-    remplace = models.PositiveIntegerField(default=0, verbose_name="NBRE PLANTS REMPLACES")
     mature = models.PositiveIntegerField(default=0, verbose_name="NBRE PLANTS VIVANTS")
-    espece = models.ForeignKey(Espece, on_delete=models.CASCADE, default=1)
-    # nb_plante = models.PositiveIntegerField(default=0, verbose_name="NBRE PLANTS REMPLACES")
-    observation = models.TextField(blank=True, null=True)
+    observation = models.ManyToManyField(ObsMonitoring,related_name="cooperatives_monitoring_observation")
     date = models.DateField()
+    taux_vitalite = models.DecimalField(max_digits=5,decimal_places=2,blank=True,null=True)
+    taux_mortalite = models.DecimalField(max_digits=5,decimal_places=2,blank=True,null=True)
     objects = models.Manager()
 
     class Meta:
         verbose_name_plural = "MONITORINGS PLANTINGS"
         verbose_name = "monitoring planting"
+    
+    def save(self, force_insert=False, force_update=False):
+        if self.mature:
+            self.taux_vitalite = ((self.mature*100)/(self.planting.plant_total))
+            self.taux_mortalite = 100 - self.taux_vitalite        
+        super(Monitoring, self).save(force_insert, force_update)
+
+    def get_observation(self):
+        ret = ''
+        for obs in self.observation.all():
+            ret = ret + obs.libelle + ' , '
+        return ret[:-1]
+
+#class DetailMonitoring(models.Model):
+#   monitoring = models.ForeignKey(Monitoring, on_delete=models.CASCADE)
+#   espece = models.ForeignKey(Espece, on_delete=models.CASCADE, default=1)
+#   nb_plante = models.PositiveIntegerField(default=0, verbose_name="NBRE PLANTS REMPLACES")
+
+#   def __str__(self):
+#       return ('%s %s ======>%s') %(self.monitoring, self.espece, self.nb_plante)
 
 
 class Formation(models.Model):
@@ -273,7 +299,7 @@ class Formation(models.Model):
     libelle = models.CharField(max_length=500, verbose_name='INTITULE DE LA FORMATION')
     debut = models.DateField(verbose_name="DATE DEBUT")
     fin = models.DateField(verbose_name="DATE FIN")
-    observation = models.TextField(blank=True, null=True)
+    observation = models.ManyToManyField(ObsMonitoring)
     details = models.TextField(blank=True, null=True)
     objects = models.Manager()
 

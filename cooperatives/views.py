@@ -1151,8 +1151,28 @@ def detail_planting(request, id=None):
         if monitoringForm.is_valid():
             monitoring = monitoringForm.save(commit=False)
             monitoring.planting_id = instance.id
-            monitoring = monitoring.save()
-            print(monitoring)
+            monitoring = monitoring.save()            
+            monitoringForm.save_m2m()
+            #selected_observations = monitoringForm.cleaned_data.get('observations')# returns list of all selected categories e.g. ['Sports','Adventure']
+            #print(selected_observations)
+            # Now saving the ManyToManyField, can only work after saving the form
+            #for id in monitoringForm.cleaned_data.get('observations'):obs_obj = ''.join(id)  # converting list into string
+                #z = int(y)
+                #obs_obj_list = ObservationMonitoring.objects.get(obs_obj)  # get object by title i.e I declared unique for title under Category model
+                #monitoring.observations.add(obs_obj_list)  # now add each category object to the saved form object
+            #return redirect('confirmation', id=obj.pk)
+            #monitoring.observations.add(request.POST['observations'])
+            #new_track.store.add(request.POST['store'])
+
+            #observation = ObservationMonitoring.objects.get(id=int(request.POST['observations']))
+            #monitoring.observations.add(observation)
+            #for observation_id in request.POST['observations']:
+            #for observation_id in request.POST.getlist('observations'):
+            #    ObservationMonitoring.objects.create(id=observation_id)
+            #for observation_id in request.POST.getlist('observations'):
+            #    observation = ObservationMonitoring.objects.create(id=int(observation_id), monitoring=monitoring)
+
+            #print(monitoring)
             messages.success(request, "Enregistrement effectué avec succès")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             # return HttpResponse("Enregistrement effectué avec succès")
@@ -1414,4 +1434,19 @@ def getParcelleCoop(request, pk=None):
     serializer = ParcelleSerializer(parcelles, many=False)
     # serializer = CooperativeSerliazer(cooperative, many=False)
     return Response(serializer.data)
+
+
+
+#parcelle par cooperative sur la carte
+
+@api_view(['GET'])
+def map_by_cooperative(request):
+    coop_connect = Cooperative.objects.get(user_id=request.user.id)
+    sections  = Section.objects.filter(cooperative_id = coop_connect.id)
+    context = {
+        "coop_connect":coop_connect,
+        "sections": sections
+    }
+
+    return render(request, 'cooperatives/usercoop/coop_connect_carte.html',context)
 

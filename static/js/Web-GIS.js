@@ -18,8 +18,8 @@
   
  //Ajouter Fonction de Calcul de Distance
  L.control.measure({ 
-    primaryLengthUnit: 'kilometers',
-    secondaryLengthUnit: 'mètres',
+    primaryLengthUnit: 'kilometres',
+    secondaryLengthUnit: 'metres',
     primaryAreaUnit: 'hectares',
     secondaryAreaUnit: 'metres²'
 }).addTo(map);

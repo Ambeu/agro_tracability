@@ -2,15 +2,28 @@ from django.urls import path
 
 # from cooperatives.views import parcelle_list
 from .views import (
+    Editpepiniere,
+    api_detail_cooperative,
+    catre_pepiniere,
     connexion,
+    delete_semence,
+    detail_pepiniere,
+    edit_semence,
+    edit_semence_view,
     loggout,
     index,
     detail_coop,
+    map_cooperative,
     map_parcelles,
     coop_parcelles,
     catre_parcelles,
-    catre_parcelles_coop,
-    parcelle_info
+    catre_parcelles_coop, PlantingParifApiView, DetailPlantingParifApiView,
+    map_pepinieres,
+    map_plantings_espece, coop_section,
+    map_section,
+    pepiniere,
+    section_parcelles,
+    semence_by_pepiniere
     # projet,
     # # pepiniere,
     # # detail_pepiniere,
@@ -108,18 +121,39 @@ urlpatterns = [
     # path('folium_map/', folium_map, name="folium_map"),
     # path('folium_palntings_map/', folium_palntings_map, name="folium_palntings_map"),
 
-    # Api
+    # Api 
     path('api/v1/map_parcelles/', map_parcelles, name='map_parcelles'),
-    path('api/v1/parcelle_info/', parcelle_info, name='parcelle_info'),
+    path('api/v1/map_plantings_espece/<int:id>', map_plantings_espece, name='map_plantings_espece'),
+    path('api/planting/v1/', PlantingParifApiView.as_view(), name="plantingParif_api"),
+
+     path('api/coop_planting/v1/<int:id>', api_detail_cooperative, name="coop_plantingParif_api"),
+
+    path('api/details_planting/v1/', DetailPlantingParifApiView.as_view(), name="detailplantingParif_api"),
     path('map_parcelles/', catre_parcelles, name='catre_parcelles'),
+     path('map_section/', map_section, name='map_section'),
+    path('api/v1/section_parcelles/<int:id>', section_parcelles, name='section_parcelles'),
     path('api/v1/coop_parcelles/<int:id>', coop_parcelles, name='coop_parcelles'),
+    path('api/v1/coop_section/<int:id_coop>', coop_section, name='coop_section'),
     path('coop_parcelles/', catre_parcelles_coop, name='carte_parcelles_coop'),
+    path('map_cooperative/', map_cooperative, name='map_cooperative'),
     # path('plantings/api/v1/', planting_list, name="plantings"),
     # path('producteurs/api/v1/', produteur_list, name="producteurs"),
     # path('parcelles/api/v1/', parcelles_list, name="parcelles"),
     # path('plantings/api/v1/', planting_list, name="plantings"),
     # path('details_plantings/api/v1/', details_planting_list, name="details_plantings"),
 
+
+
+
+     path('pepiniere/', pepiniere, name='pepinieres'),
+     path('carte_pepiniere/', catre_pepiniere, name='catre_pepiniere'),
+     path('api/v1/map_pepinieres/', map_pepinieres, name='map_pepinieres'),
+     path('Editpepiniere/<int:id>', Editpepiniere, name='Editpepiniere'),
+     path('pepiniere/<int:id>', detail_pepiniere, name='pepiniere'),
+     path('delete_semence/<int:id>', delete_semence, name='delete_semence'),
+     path('semence', edit_semence, name='edit_semence'),
+     path('edit_semence_view', edit_semence_view, name='edit_semence_view'),
+     path('semence_by_pepiniere/<int:id>', semence_by_pepiniere, name='semence_by_pepiniere'),
 
 
 

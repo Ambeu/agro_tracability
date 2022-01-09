@@ -6,57 +6,81 @@ const icon = L.icon({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png"
 });
 
-// Promise.all([
-//   fetch("http://127.0.0.1:8000/parif/api/planting_parif/v1/"),
-//   fetch("http://127.0.0.1:8000/parif/api/details_planting_parif/v1/")
-// ]).then(async ([response1, response2]) => {
-//   const responseData1 = await response1.json();
-//   const responseData2 = await response2.json();
 
 Promise.all([
-  fetch("http://127.0.0.1:8000/parif/api/planting_parif/v1/"),
-  fetch("http://127.0.0.1:8000/parif/api/details_planting_parif/v1/")
-]).then(async ([response1, response2]) => {
+  fetch("http://127.0.0.1:8000/api/planting/v1/"),
+]).then(async ([response1]) => {
+
   const responseData1 = await response1.json();
-  const responseData2 = await response2.json();
 
   const data1 = responseData1;
-  const data2 = responseData2;
-  console.log(data2);
+  
+  
   const plantings = L.featureGroup().addTo(map);
 
-data1.forEach(({ parcelle, plant_total, campagne, projet, date,  id: id }) => {
+data1.forEach(({ parcelle, plant_total, campagne, projet, date, id  }) => {
+
     plantings.addLayer(
       L.marker([parcelle.latitude, parcelle.longitude], { icon }).bindPopup(
         `
-          <table class="table table-striped table-bordered" style="width: 550px">
-            <h4 class="text-center" style="font-weight: bold">
-                    PARCELLE : ${parcelle.code_parcelle} <br>
-                    PROPRIETAIRE : ${parcelle.proprietaire} <br>
-                    PLANTS RECUS : ${plant_total}
-            </h4>
+          <table class="table table-striped table-bordered">
             <thead style="align-items: center">
                 <tr>
-<!--                  <th scope="col" class="center">PARCELLE</th>-->
-                  <th scope="col" class="text-center">ESPECE</th>
-                  <th scope="col" class="text-center">QUANTITE</th>
-                  <th scope="col" class="text-center">DATE</th>
+                  <th scope="col" class="center">ID</th>
+                  <th scope="col" class="center">INFORMATIONS</th>
                 </tr>
             </thead>
             <tbody style="align-items: center">
                 <tr>
-<!--                    <td class="text-uppercase"><strong>${parcelle.code_parcelle}</strong></td>-->
-                    <td class="text-uppercase text-center"><strong>${data2.find((d) => (d.id) === (id)).espece_libelle}</strong></td>
-                    <td class="text-uppercase text-center"><strong>${data2.find((d) => Number(d.id) === Number(id)).nb_plante}</strong></td>
-                    <td class="text-uppercase text-center"><strong>${date}</strong></td>
+                    <th scope="col"><b>CODE PARCELLE :</b></th>
+                    <td class="text-uppercase"><strong>${parcelle.code}</strong></td>
+                </tr>
+                <tr>
+                    <th scope="col"><b>PRODUCTEUR :</b></th>
+                    <td class="text-uppercase"><strong>${parcelle.producteur.code} - ${parcelle.producteur.nom}</strong></td>
+                </tr>
+                <tr>
+                    <th scope="col"><b>LOCALITE :</b></th>
+                    <td class="text-uppercase"><strong>${parcelle.producteur.localite}</strong></td>
+                </tr>
+                <tr>
+                    <th scope="col"><b>COORDONNEES :</b></th>
+                    <td class="text-uppercase">(${parcelle.latitude},${parcelle.longitude})</td>
+                </tr>
+                <tr>
+                    <th scope="col"><b>CERTIFICATION : </b></th>
+                    <td class="text-uppercase">${parcelle.certification}</td>
+                </tr>
+                <tr>
+                    <th scope="col"><b>CULTURE :</b></th>
+                    <td class="text-uppercase">${parcelle.culture}</td>
+                </tr>
+                <tr>
+                    <th scope="col"><b>SUPERFICIE</b></th>
+                    <td class="text-uppercase">${parcelle.superficie} (Ha)</td>
+                </tr>
+                <tr>
+                    <th scope="col"><b>ESPECES</b></th>
+                    <td class="text-uppercase text-center">
+                        <a class="btn btn-success" href="http://127.0.0.1:8000/api/v1/map_plantings_espece/${id}" target="_blank"  role="button"><i class="glyphicon glyphicon-tree-deciduous"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="col"><b>CONTOURS</b></th>
+                    <td class="text-uppercase text-center">
+                        <a class="btn btn-success" href="#" role="button"><i class="fas fa-map-marked-alt"></i></a>
+                    </td>
                 </tr>
             </tbody>
           </table>
+        
         `
+
+
       )
     );
   });
-<!--                        (${espece.libelle}==>${nb_plante})-->
+
 //  map.fitBounds(plantings.getBounds());
 });
 
@@ -126,6 +150,21 @@ var overLayMaps = {
  // 'ABIDJAN': singleMarker
 }
 L.control.layers(baseMaps, overLayMaps, {collapse :false, position: 'topleft'}).addTo(map);
+
+
+
+function ajaxModalEspece(url){
+    event.preventDefault();
+
+    $.ajax({
+      url: url,
+      method: "GET",
+      dataType : "json",
+      success:function(response){
+        console.log(response.data);
+      }
+  })
+}
 
 
 

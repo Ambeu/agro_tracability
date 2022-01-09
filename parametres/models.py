@@ -7,9 +7,12 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 import datetime
+from django.db.models.deletion import CASCADE
 
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.db.models import Sum
+from django.shortcuts import get_object_or_404
 
 from clients.models import Client
 
@@ -292,3 +295,142 @@ class Cooperative(models.Model):
     # Create your models here.
 
 # Create your models here.
+
+
+class ObsMonitoring(models.Model):
+    libelle = models.CharField(max_length=255)
+
+
+    def __str__(self):
+        return '%s' % (self.libelle)
+
+    def save(self, force_insert=False, force_update=False):
+        self.libelle = self.libelle.upper()
+        super(ObsMonitoring, self).save(force_insert, force_update)
+
+
+class Pepiniere(models.Model):
+    #cooperative = models.ForeignKey(Cooperative, on_delete=models.CASCADE)
+    projet = models.ForeignKey(Projet, on_delete=models.CASCADE, default=1)
+    campagne = models.ForeignKey(Campagne, on_delete=models.CASCADE, default=1)
+    region = models.CharField(max_length=250, verbose_name="DELEGATION REGIONALE")
+    ville = models.CharField(max_length=250, verbose_name="VILLE")
+    site = models.CharField(max_length=250, verbose_name="SITE")
+    latitude = models.CharField(max_length=10, null=True, blank=True)
+    longitude = models.CharField(max_length=10, null=True, blank=True)
+    #fournisseur = models.CharField(max_length=255, verbose_name="NOM ET PRENOMS FOURNISSEUR")
+    #contacts_fournisseur = models.CharField(max_length=50, blank=True, null=True, verbose_name="CONTACTS FOURNISSEUR")
+    technicien = models.CharField(max_length=255, verbose_name="NOM ET PRENOMS TECHNICIEN")
+    contacts_technicien = models.CharField(max_length=50, blank=True, null=True, verbose_name="CONTACTS TECHNICIEN")
+    superviseur = models.CharField(max_length=255, verbose_name="NOM ET PRENOMS TECHNICIEN")
+    contacts_superviseur = models.CharField(max_length=50, blank=True, null=True, verbose_name="CONTACTS SUPERVISUER")
+    sachet_recus = models.PositiveIntegerField(default=0, verbose_name="QTE TOTAL SACHET RECU")
+    production_plant = models.PositiveIntegerField(default=0, verbose_name="PLANTS A PRODUIRE")
+    production_realise = models.PositiveIntegerField(default=0, verbose_name="REALISATION")
+    pourcentage_prod = models.PositiveIntegerField(default=0, verbose_name="POURCENTAGE DE PRODUCTION")
+    plant_mature = models.PositiveIntegerField(default=0, verbose_name="NBRE PLANT MATURE")
+    plant_retire = models.PositiveIntegerField(default=0, verbose_name="NBRE TOTAL PLANT RETIRE")
+    # sachet_rempli = models.PositiveIntegerField(default=0, verbose_name="QTE TOTAL SACHET REMPLI")
+    # sachet_perdu = models.PositiveIntegerField(default=0, verbose_name="QTE TOTAL SACHET PERDU")
+    add_le = models.DateTimeField(auto_now_add=True)
+    update_le = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+    def __str__(self):
+        return '%s - %s' %(self.ville, self.site)
+
+    def taux(self):
+        if self.production_plant != 0 and self.production_realise != 0:
+            Taux = float("{:.2f}".format((self.production_realise / self.production_plant) * 100))
+            self.pourcentage_prod = Taux
+            return Taux
+
+    def save(self, force_insert=False, force_update=False):
+        self.region = self.region.upper()
+        self.ville = self.ville.upper()
+        self.site = self.site.upper()
+        self.technicien = self.technicien.upper()
+        self.superviseur = self.superviseur.upper()
+        if self.production_plant !=0 and self.production_realise !=0:
+            self.pourcentage_prod = float("{:.2f}".format((self.production_realise / self.production_plant) * 100))
+        super(Pepiniere, self).save(force_insert, force_update)
+
+    def coordonnees(self):
+        return str(self.longitude) + ', ' + str(self.latitude)
+
+    class Meta:
+        verbose_name_plural = "PEPINIERES"
+        verbose_name = "pépinière"
+        # ordering = ["libelle"]
+
+
+
+
+class DetailsSemenceEspece(models.Model):
+    libelle = models.CharField(max_length=255)
+
+
+    def __str__(self):
+        return '%s' % (self.libelle)
+
+    def save(self, force_insert=False, force_update=False):
+        self.libelle = self.libelle.upper()
+        super(DetailsSemenceEspece, self).save(force_insert, force_update)
+
+
+
+class Fournisseur(models.Model):
+    pseudo = models.CharField(max_length=255)
+    ville = models.CharField(max_length=255)
+    localite = models.CharField(max_length=255)
+    contact = models.CharField(max_length=255,verbose_name="CONTACT")
+    objects = models.Manager()
+
+    def __str__(self):
+        return '%s - %s' % (self.pseudo,self.localite)
+
+    def save(self, force_insert=False, force_update=False):
+        self.pseudo = self.pseudo.upper()
+        self.ville = self.ville.upper()
+        self.localite = self.localite.upper()
+        super(Fournisseur, self).save(force_insert, force_update)
+
+    class Meta:
+        verbose_name_plural = "FOURNISSEURS"
+        verbose_name = "fournisseur"
+
+
+class Semence_Pepiniere(models.Model):
+    pepiniere = models.ForeignKey(Pepiniere, on_delete=models.CASCADE)
+    espece_recu = models.ForeignKey(Espece, on_delete=models.CASCADE)
+    production = models.PositiveIntegerField(default=0, verbose_name="NB PLANTS A PRODUIRE")
+    qte_recu = models.PositiveIntegerField(default=0, verbose_name="QTE RECU")
+    date = models.DateField(verbose_name="DATE RECEPTION")
+    fournisseur = models.ForeignKey(Fournisseur,on_delete=CASCADE,blank=True,null=True)
+    details = models.TextField(blank=True,null=True)
+    add_le = models.DateTimeField(auto_now_add=True)
+    update_le = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+    def total_semence(self):
+        pepiniere = get_object_or_404(Pepiniere, id=id)
+        t_semence = Semence_Pepiniere.objects.filter(pepiniere_id=pepiniere).aggregate(total=Sum('qte_recu'))
+        return t_semence
+
+    class Meta:
+        verbose_name_plural = "DETAILS SEMENCES RECUS"
+        verbose_name = "détail semence reçu"
+        # ordering = ["libelle"]
+
+
+
+
+
+    
+
+    
+
+
+
+
+
