@@ -7,7 +7,7 @@ const icon = L.icon({
 });
 
 Promise.all([
-  fetch("http://127.0.0.1:8000/api/v1/map_parcelles/"),
+  fetch("http://tracability.pythonanywhere.com/api/v1/map_parcelles/"),
 ]).then(async ([response1]) => {
   const responseData1 = await response1.json();
   const data1 = responseData1;
@@ -95,13 +95,13 @@ var climat = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 
 // Ajouter Popup de Marquage
 var singleMarker = L.marker([5.349390, -4.017050])
- .bindPopup("Bienvenus en .<br> Côte d'Ivoire.")
+ .bindPopup("Bienvenus en .<br> CÃ´te d'Ivoire.")
  .openPopup();
 
 // Ajouter Calcul de Distance
 L.control.scale().addTo(map);
 
-//Afficher les Coordonnées sur la carte
+//Afficher les CoordonnÃ©es sur la carte
 map.on('mousemove', function (e) {
  //console.log(e);
  $('.coordinates').html(`lat: ${e.latlng.lat}, lng: ${e.latlng.lng}`)
@@ -143,7 +143,6 @@ var overLayMaps = {
  // 'ABIDJAN': singleMarker
 }
 L.control.layers(baseMaps, overLayMaps, {collapse :false, position: 'topleft'}).addTo(map);
-
 
 
 
