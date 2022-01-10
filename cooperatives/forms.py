@@ -141,6 +141,7 @@ class EditProdForm(forms.ModelForm):
             'num_document',
             'document',
         ]
+        
     def get_cooperative(self, request, *args, **kwargs):
         cooperative = Cooperative.objects.get(user_id=request.user.id)
         producteur_obj = Producteur.objects.filter(cooperative_id=cooperative)

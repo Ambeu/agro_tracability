@@ -350,6 +350,7 @@ def detail_coop(request, id=None):
 def pepiniere(request):
     pepinieres = Pepiniere.objects.all()
     pepiForm = PepiniereForm()
+    activate = "pepiniere"
     if request.method == 'POST':
         pepiForm = PepiniereForm(request.POST, request.FILES)
         if pepiForm.is_valid():
@@ -362,6 +363,7 @@ def pepiniere(request):
     context = {
         'pepinieres': pepinieres,
         'pepiForm': pepiForm,
+        'activate':activate
     }
     return render(request, 'parametres/pepinieres.html', context)
 

@@ -9,7 +9,7 @@
 {% block title %}
     Parcelles |
 {% endblock %}
-{% block content %}
+{% block content %} 
     <div id="wrapper">
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         {% if user.is_authenticated %}
@@ -96,7 +96,7 @@
                                                     <td class="center">{{ parcelle.longitude }}</td>
                                                     <td class="center">{{ parcelle.latitude }}</td>
                                                     <td class="center" style="align-items: center">
-                                                        <a href="{% url 'cooperatives:edit_parcelle' parcelle.id %}" class="btn btn-primary">
+                                                        <a href="{% url 'cooperatives:edit_parcelle' parcelle.id %}" style="padding: 3px;margin-top: 6px;" class="btn btn-primary">
                                                             <i class="fa fa-edit fa-fw"></i>
                                                         </a>
                                                         <!--<button type="button" class="btn btn-success" style="font-size:1.8vmin;" data-toggle="modal" data-target="#DetailParcelle" data-whatever="@mdo">-->
@@ -105,7 +105,7 @@
 {#                                                        <a href="#" class="btn btn-success">#}
 {#                                                            <i class="fa fa-eye fa-fw"></i>#}
 {#                                                        </a>#}
-                                                        <a href="{% url 'cooperatives:parcelle_delete' parcelle.id %}" class="btn btn-danger">
+                                                        <a href="{% url 'cooperatives:parcelle_delete' parcelle.id %}" style="padding: 3px;margin-top: 6px;" class="btn btn-danger">
                                                             <i class="fa fa-trash fa-fw"></i>
                                                         </a>
                                                     </td>

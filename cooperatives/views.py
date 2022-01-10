@@ -22,7 +22,7 @@ import folium
 from django_pandas.io import read_frame
 from folium import raster_layers, plugins, Popup
 import json
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.views.generic import TemplateView
 from folium.plugins import MarkerCluster
 from rest_framework.decorators import api_view
@@ -94,7 +94,7 @@ def coop_dashboard(request):
     # nb_producteurs = sections.producteur.set_all()
     # querysets = Detail_Retrait_plant.objects.values("espece__libelle").filter(retait__pepiniere__cooperative_id=cooperative).annotate(plant_retire=Sum('plant_retire'))
     # semences = Semence_Pepiniere.objects.values("espece_recu__libelle").filter(pepiniere__cooperative_id=cooperative).annotate(qte_recu=Sum('qte_recu'))
-
+    activate = "cooperative"
     context={
     'cooperative':cooperative,
     'producteurs': producteurs,
@@ -112,6 +112,7 @@ def coop_dashboard(request):
     'espece_planting': espece_planting,
     'plantings': plantings,
     'coop_plants': coop_plants,
+    'activate':activate
     # 'labels': labels,
     # 'data': data,
     # 'mylabels': mylabels,
@@ -256,6 +257,7 @@ def my_section(request):
     return render(request, 'cooperatives/section.html', context)
 
 def producteurs(request):
+    activate = "producteurs"
     cooperative = Cooperative.objects.get(user_id=request.user.id)
     producteurs = Producteur.objects.filter(cooperative_id=cooperative)#.order_by("-add_le")
     sections = Section.objects.filter(cooperative_id=cooperative)
@@ -282,37 +284,33 @@ def producteurs(request):
         'prodForm': prodForm,
         'sections':sections,
         'sous_sections':sous_sections,
+        'activate':activate
 
     }
     return render(request, "cooperatives/producteurs.html", context)
 
-def prod_update(request, code=None):
-	instance = get_object_or_404(Producteur, code=code)
-	form = EditProdForm(request.POST or None, request.FILES or None, instance=instance)
-	if form.is_valid():
-		instance = form.save(commit=False)
-		instance.save()
-		messages.success(request, "Producteur Modifié Avec Succès", extra_tags='html_safe')
-		return HttpResponseRedirect(reverse('cooperatives:producteurs'))
-
-	context = {
-		"instance": instance,
-		"form":form,
-	}
-	return render(request, "cooperatives/prod_edt.html", context)
+#def prod_update(request, code=None):
+#	instance = get_object_or_404(Producteur, code=code)
+#	form = EditProdForm(request.POST or None, request.FILES or None, instance=instance)
+#	if form.is_valid():
+#		instance = form.save(commit=False)
+#		instance.save()
+#		messages.success(request, "Producteur Modifié Avec Succès", extra_tags='html_safe')
+#		return HttpResponseRedirect(reverse('cooperatives:producteurs'))
+#
+#	context = {
+#		"instance": instance,
+#		"form":form,
+#	}
+#	return render(request, "cooperatives/prod_edt.html", context)
+    
 
 def prod_delete(request, code=None):
     item = get_object_or_404(Producteur, code=code)
-    if request.method == "POST":
-        item.delete()
-        messages.error(request, "Producteur Supprimer Avec Succès")
-        return redirect('cooperatives:producteurs')
-    context = {
-        'item': item,
-    }
-    return render(request, 'cooperatives/prod_delete.html', context)
+    item.delete()
 
 def parcelles(request):
+    activate = "parcelles"
     cooperative = Cooperative.objects.get(user_id=request.user.id)
     prods = Producteur.objects.filter(cooperative_id=cooperative)
     s_sections = Sous_Section.objects.all().filter(section__cooperative_id=cooperative)
@@ -343,6 +341,7 @@ def parcelles(request):
         'parcelleForm': parcelleForm,
         'producteurs': prods,
         's_sections': s_sections,
+        'activate': activate
     }
     return render(request, "cooperatives/parcelles.html", context)
 
@@ -789,6 +788,7 @@ def localisation(request):
 
 
 def formation(request):
+    activate = "formations"
     cooperative = Cooperative.objects.get(user_id=request.user.id)
     formations = Formation.objects.all().filter(cooperative_id=cooperative)
     formationForm = FormationForm()
@@ -798,6 +798,7 @@ def formation(request):
             formation = formationForm.save(commit=False)
             formation.cooperative_id = cooperative.id
             formation = formation.save()
+            formationForm.save_m2m()
             # print(formation)
             # print(planting.parcelle.producteur)
         messages.success(request, "Formation Ajoutée avec succès")
@@ -807,6 +808,7 @@ def formation(request):
         'cooperative': cooperative,
         'formations': formations,
         'formationForm': formationForm,
+        'activate': activate
     }
     return render(request, 'cooperatives/formations.html', context)
 
@@ -1026,6 +1028,7 @@ class AddPlantingView(View):
             parcelle_list.append({"parcelle": parcelle})
 
         # merchant_users = MerchantUser.objects.filter(auth_user_id__is_active=True)
+        #activate = "plantings"
         especes = Espece.objects.all()
         campagnes = Campagne.objects.all()
         projets = Projet.objects.all()
@@ -1037,6 +1040,7 @@ class AddPlantingView(View):
             "projets" : projets,
             "especes" : especes,
             "plantings" : plantings,
+            #"activate": activate
         }
         return render(self.request, "cooperatives/plantings.html", context)
 
@@ -1103,6 +1107,7 @@ def CoopPlantings(request):
     cooperative = Cooperative.objects.get(user_id=request.user.id)
     # parcelles = cooperative.parcelles_set.all()
     parcelles = Parcelle.objects.filter(producteur__cooperative_id=cooperative)
+    activate = "plantings"
     # especes = Espece.objects.all()
     campagnes = Campagne.objects.all()
     projets = Projet.objects.all()
@@ -1131,6 +1136,7 @@ def CoopPlantings(request):
         'campagnes':campagnes,
         'projets':projets,
         'plantingForm':plantingForm,
+        "activate": activate
     }
     return render(request, 'cooperatives/plantings.html', context)
 
@@ -1153,25 +1159,7 @@ def detail_planting(request, id=None):
             monitoring.planting_id = instance.id
             monitoring = monitoring.save()            
             monitoringForm.save_m2m()
-            #selected_observations = monitoringForm.cleaned_data.get('observations')# returns list of all selected categories e.g. ['Sports','Adventure']
-            #print(selected_observations)
-            # Now saving the ManyToManyField, can only work after saving the form
-            #for id in monitoringForm.cleaned_data.get('observations'):obs_obj = ''.join(id)  # converting list into string
-                #z = int(y)
-                #obs_obj_list = ObservationMonitoring.objects.get(obs_obj)  # get object by title i.e I declared unique for title under Category model
-                #monitoring.observations.add(obs_obj_list)  # now add each category object to the saved form object
-            #return redirect('confirmation', id=obj.pk)
-            #monitoring.observations.add(request.POST['observations'])
-            #new_track.store.add(request.POST['store'])
-
-            #observation = ObservationMonitoring.objects.get(id=int(request.POST['observations']))
-            #monitoring.observations.add(observation)
-            #for observation_id in request.POST['observations']:
-            #for observation_id in request.POST.getlist('observations'):
-            #    ObservationMonitoring.objects.create(id=observation_id)
-            #for observation_id in request.POST.getlist('observations'):
-            #    observation = ObservationMonitoring.objects.create(id=int(observation_id), monitoring=monitoring)
-
+    
             #print(monitoring)
             messages.success(request, "Enregistrement effectué avec succès")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1436,7 +1424,7 @@ def getParcelleCoop(request, pk=None):
     return Response(serializer.data)
 
 
-
+ 
 #parcelle par cooperative sur la carte
 
 @api_view(['GET'])
@@ -1450,3 +1438,65 @@ def map_by_cooperative(request):
 
     return render(request, 'cooperatives/usercoop/coop_connect_carte.html',context)
 
+
+
+@api_view(['GET'])
+def edit_monitoring_view(request,id=None):
+    d_date = 1
+    instance = get_object_or_404(Monitoring, id=id)
+    monitoringForm = MonitoringForm(request.POST or None, request.FILES or None, instance=instance)
+    context = {
+        "instance": instance,
+        "monitoringForm": monitoringForm,
+        "d_date":d_date
+    }
+    
+    templateStr = render_to_string("cooperatives/edit_monitoring.html", context)
+    return JsonResponse({'templateStr':templateStr,'id':id},safe=False)
+
+
+
+@api_view(['POST'])
+def edit_monitoring(request):
+    id = request.POST['instance_id']
+    instance = get_object_or_404(Monitoring, id=id)
+    monitoringForm = MonitoringForm(request.POST or None, request.FILES or None, instance=instance)
+    if request.method == 'POST':
+        if monitoringForm.is_valid():
+            monitoring = monitoringForm.save(commit=False)
+            monitoring.save()
+            monitoringForm.save_m2m()
+            return JsonResponse({"msg": "Modification effectuée avec success","status":200,"id": id},safe=False)
+        else:
+            return JsonResponse({"errors":monitoringForm.errors,"danger": "Modification incorrect"},safe=False)
+        
+
+
+
+@api_view(['GET'])
+def prod_update(request,code=None):
+    d_date = 1
+    instance = get_object_or_404(Producteur, code=code)
+    form = EditProdForm(request.POST or None, request.FILES or None, instance=instance)
+    context = {
+		"instance": instance,
+		"form":form,
+        "d_date": d_date
+	}
+    
+    templateStr = render_to_string("cooperatives/prod_edt.html", context)
+    return JsonResponse({'templateStr':templateStr,'id':code},safe=False)
+
+@api_view(['POST'])
+def edit_productor(request):
+    id = request.POST['instance_id']
+    instance = get_object_or_404(Producteur, id=id)
+    form = EditProdForm(request.POST or None, request.FILES or None, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            producteur = form.save(commit=False)
+            producteur.save()
+            return JsonResponse({"msg": "Modification effectuée avec success","status":200,"id": id},safe=False)
+        else:
+            return JsonResponse({"errors":form.errors,"danger": "Modification incorrect"},safe=False)
+        

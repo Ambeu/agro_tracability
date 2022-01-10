@@ -50,6 +50,49 @@ function delete_semence(url) {
 
 }
 
+function edit_monitoring(url) {
+    event.preventDefault();
+    var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+
+    $.ajax({
+        url: url,
+        method: "GET",
+
+        dataType : "json",
+        success:function(response){
+         //console.log(response.templateStr);
+           $('#MonitoringModal').html(response.templateStr)
+           $('#MonitoringModal').modal('show')
+           
+        }
+    });
+}
+
+function reload() {
+    location.reload();
+}
+
+
+
+function edit_prod(url) {
+
+    event.preventDefault();
+    var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+
+    $.ajax({
+        url: url,
+        method: "GET",
+        dataType : "json",
+        success:function(response){
+         //console.log(response.templateStr);
+           $('#ProducteursModal').html(response.templateStr)
+           $('#ProducteursModal').modal('show')
+           
+        }
+    });
+
+}
+
 
 
 

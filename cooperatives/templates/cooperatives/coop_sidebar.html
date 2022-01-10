@@ -3,19 +3,19 @@
     <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
             <li>
-                <a href="{% url 'cooperatives:dashboard' %}" class="active"><i class="fa fa-dashboard fa-fw"></i> DASHBOARD</a>
+                <a href="{% url 'cooperatives:dashboard' %}" {% if activate == "cooperative" %}class="active"{% else %} class="" {% endif %}><i class="fa fa-dashboard fa-fw"></i> DASHBOARD</a>
             </li>
             <li>
-                <a href="{% url 'cooperatives:producteurs' %}"><i class="fa fa-users fa-fw"></i> PRODUCTEURS</a>
+                <a href="{% url 'cooperatives:producteurs' %}" {% if activate == "producteurs" %}class="active"{% else %} class="" {% endif %}><i class="fa fa-users fa-fw"></i> PRODUCTEURS</a>
             </li>
             <li>
-                <a href="{% url 'cooperatives:parcelles' %}"><i class="glyphicon glyphicon-map-marker"></i> PARCELLES</a>
+                <a href="{% url 'cooperatives:parcelles' %}" {% if activate == "parcelles" %}class="active"{% else %} class="" {% endif %}><i class="glyphicon glyphicon-map-marker"></i> PARCELLES</a>
             </li>
 {#            <li>#}
 {#                <a href="{% url 'cooperatives:pepinieres' %}"><i class="glyphicon glyphicon-grain"></i> PEPINIERES</a>#}
 {#            </li>#}
             <li>
-                <a href="{% url 'cooperatives:formations' %}"><i class="fa fa-bookmark fa-fw"></i> FORMATIONS</a>
+                <a href="{% url 'cooperatives:formations' %}" {% if activate == "formations" %}class="active"{% else %} class="" {% endif %}><i class="fa fa-bookmark fa-fw"></i> FORMATIONS</a>
             </li>
 {#             <li>#}
 {#                <a href="#"><i class="glyphicon glyphicon-tree-deciduous"></i> PLANTING<span class="fa arrow"></span></a>#}
@@ -30,14 +30,14 @@
 {#                <!-- /.nav-second-level -->#}
 {#            </li>#}
             <li>
-                <a href="{% url 'cooperatives:CoopPlantings' %}"><i class="glyphicon glyphicon-tree-deciduous"></i> PLANTINGS</a>
+                <a href="{% url 'cooperatives:CoopPlantings' %}" {% if activate == "plantings" %}class="active"{% else %} class="" {% endif %}><i class="glyphicon glyphicon-tree-deciduous"></i> PLANTINGS</a>
             </li>
-            <li>
+            <!-- <li>
                 <a href=""><i class="fa fa-balance-scale fa-fw"></i> CHARGEMENT PRODUITS</a>
             </li>
             <li>
                 <a href=""><i class="fa fa-truck fa-fw"></i> LIVRAISON PRODUITS</a>
-            </li>
+            </li>-->
             <li>
                 <a href="{% url 'cooperatives:map_by_cooperative' %}" target="_blank"><i class="fa fa-map fa-fw"></i> CARTOGRAPHIE</a>
             </li>

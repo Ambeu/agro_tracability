@@ -7,6 +7,9 @@ from .views import (
     coop_dashboard,
     add_section,
     add_sous_section,
+    edit_monitoring,
+    edit_monitoring_view,
+    edit_productor,
     export_parcelles_to_pdf,
     producteurs,
     # cooperative,
@@ -94,4 +97,8 @@ urlpatterns = [
 
     #route des parcelles par cooperative
     path('map_by_cooperative', map_by_cooperative, name="map_by_cooperative"),
+    ######################################monitoring
+    path('edit_monitoring_view/<int:id>', edit_monitoring_view, name="edit_monitoring_view"),
+    path('edit_monitoring', edit_monitoring, name="edit_monitoring"),
+    path('edit_productor', edit_productor, name="edit_productor"),
 ]

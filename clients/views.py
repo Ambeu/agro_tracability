@@ -53,6 +53,7 @@ def client_index(request):
     nb_parcelles = Parcelle.objects.all().count()
     Superficie = Parcelle.objects.aggregate(total=Sum('superficie'))['total']
     Total_plant = Planting.objects.aggregate(total=Sum('plant_recus'))['total']
+    activate = "dashboard"
 
     context = {
         'cooperatives':cooperatives,
@@ -64,6 +65,7 @@ def client_index(request):
         'Total_plant': Total_plant,
         'prod_coop': prod_coop,
         'section_coop': section_coop,
+        'activate':activate
         #'section_cooperative': section_cooperative,
     }
     return render(request, 'clients/index.html', context)

@@ -58,10 +58,17 @@
                                                         <td class="center">{{ formation.debut|date:'d/m/Y' }}</td>
                                                         <td class="center">{{ formation.fin|date:'d/m/Y' }}</td>
                                                         <td class="center">
-                                                            <a href="{% url 'cooperatives:Editformation' formation.id %}" class="btn btn-primary">
+                                                            <!-- <a href="#" onclick="edit_formatoin('{% url 'cooperatives:Editformation' formation.id %}')" style="padding: 3px;margin-top: 6px;" class="btn btn-primary">
                                                                 <i class="glyphicon glyphicon-edit"></i>
-                                                            </a>
-                                                            <a href="{% url 'cooperatives:formation' formation.id %}" class="btn btn-success">
+                                                            </a> 
+                                                            <a href="{% url 'cooperatives:formation' formation.id %}" style="padding: 3px;margin-top: 6px;" class="btn btn-success">
+                                                                <i class="glyphicon glyphicon-chevron-right"></i>
+                                                            </a>-->
+
+                                                            <a href="{% url 'cooperatives:Editformation' formation.id %}"  style="padding: 3px;margin-top: 6px;" class="btn btn-primary">
+                                                                <i class="glyphicon glyphicon-edit"></i>
+                                                            </a> 
+                                                            <a href="{% url 'cooperatives:formation' formation.id %}" style="padding: 3px;margin-top: 6px;" class="btn btn-success">
                                                                 <i class="glyphicon glyphicon-chevron-right"></i>
                                                             </a>
                                                         </td>

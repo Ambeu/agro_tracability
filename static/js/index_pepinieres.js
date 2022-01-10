@@ -46,10 +46,6 @@ data1.forEach(({id,cooperative, region, ville, site, latitude, longitude, techni
                     <td class="text-uppercase"><strong>${technicien} - ${contacts_technicien}</strong></td>                     
                 </tr>
                 <tr>
-                <th scope="col"><b>FOURNISSEUR:</b></th>
-                  <td class="text-uppercase"><strong>${fournisseur} - ${contacts_fournisseur}</strong></td>                     
-                </tr>
-                <tr>
                     <th scope="col"><b>PLANTS A PRODUIRES :</b></th>
                     <td class="text-uppercase">${production_plant}</td>                    
                 </tr>
@@ -142,5 +138,10 @@ function show_semence(url) {
   });
 
 
+}
+
+function fermer() {
+    $('#modalSemence').toggle( "hide" );
+    $('.fade').removeClass('in')
 }
 

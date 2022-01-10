@@ -138,7 +138,7 @@ class Producteur(models.Model):
     type_producteur = models.CharField(max_length=50, verbose_name="TYPE PRODUCTEUR", choices=TYPE_PRODUCTEUR, default="MEMBRE")
     genre = models.CharField(max_length=2, choices=GENRE, default="H")
     nom = models.CharField(max_length=250, blank=True, null=True, verbose_name="Nom et prénoms")
-    dob = models.CharField(max_length=50, blank=True, null=True, verbose_name="Date/Année de Naissance")
+    dob = models.DateField(blank=True, null=True, verbose_name="Date/Année de Naissance")
     # dob = models.DateField(blank=True, null=True, verbose_name="date de Naissance")
     contacts = models.CharField(max_length=50, blank=True, null=True)
     localite = models.CharField(max_length=100, blank=True, null=True)
@@ -160,9 +160,13 @@ class Producteur(models.Model):
     def save(self, force_insert=False, force_update=False):
         self.code = self.code.upper()
         super(Producteur, self).save(force_insert, force_update)
+
     def clean(self):
-        if self.type_document != "AUCUN" and self.document == "":
+        if self.document != "" and self.type_document == "":
             raise ValidationError('Veuillez Charger le Document Approprié SVP')
+        else:
+            pass
+        
 
     def Photo(self):
         if self.image:
