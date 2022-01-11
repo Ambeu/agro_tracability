@@ -78,7 +78,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django.contrib.humanize',
     'djoser',
-    'leaflet',
+    # 'leaflet',
     'import_export',
     'rest_framework',
     'rest_framework.authtoken',
