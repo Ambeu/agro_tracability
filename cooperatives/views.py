@@ -1500,3 +1500,32 @@ def edit_productor(request):
         else:
             return JsonResponse({"errors":form.errors,"danger": "Modification incorrect"},safe=False)
         
+
+
+@api_view(['GET'])
+def edit_formatoin(request,id=None):
+    d_date = 1
+    instance = get_object_or_404(Formation, id=id)
+    form = FormationForm(request.POST or None, request.FILES or None, instance=instance)
+    context = {
+		"instance": instance,
+		"form":form,
+        "d_date": d_date
+	}
+    
+    templateStr = render_to_string("cooperatives/edit_formation.html", context)
+    return JsonResponse({'templateStr':templateStr,'id':id},safe=False)
+
+@api_view(['POST'])
+def update_formation(request):
+    id = request.POST['instance_id']
+    instance = get_object_or_404(Formation, id=id)
+    form = FormationForm(request.POST or None, request.FILES or None, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            formation = form.save(commit=False)
+            formation.save()
+            form.save_m2m()
+            return JsonResponse({"msg": "Modification effectuée avec success","status":200,"id": id},safe=False)
+        else:
+            return JsonResponse({"errors":form.errors,"danger": "Modification incorrect"},safe=False)

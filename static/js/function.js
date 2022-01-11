@@ -93,6 +93,23 @@ function edit_prod(url) {
 
 }
 
+function edit_formatoin(url) {
+    event.preventDefault();
+    var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+
+    $.ajax({
+        url: url,
+        method: "GET",
+        dataType : "json",
+        success:function(response){
+         //console.log(response.templateStr);
+           $('#FormationModal').html(response.templateStr)
+           $('#FormationModal').modal('show')
+           
+        }
+    });
+}
+
 
 
 
